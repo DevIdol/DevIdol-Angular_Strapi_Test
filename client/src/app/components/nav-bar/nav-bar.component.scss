@@ -1,0 +1,30 @@
+header {
+  position: fixed;
+  background-color: var(--primary-color);
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 5px 5px -5px var(--btn-hover);
+  h1 {
+    a {
+      font-size: 28px;
+      color: var(--font-light);
+    }
+  }
+  nav{
+    ul{
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 20px;
+      li{
+        cursor: pointer;
+        a{
+          color: var(--font-light);
+        }
+      }
+    }
+  }
+}

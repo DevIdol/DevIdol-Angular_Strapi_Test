@@ -1,0 +1,68 @@
+<div class="login-wrapper">
+  <form [formGroup]="loginForm" (ngSubmit)="login()" novalidate>
+    <h2>Welcome Back, Please Login</h2>
+    <mat-form-field class="example-full-width">
+      <mat-label>Email</mat-label>
+      <input
+        type="email"
+        matInput
+        formControlName="email"
+        placeholder="Ex. user@example.com"
+      />
+      <mat-error
+        class="error"
+        *ngIf="
+          loginForm.get('email')?.invalid &&
+          (loginForm.get('email')?.dirty || loginForm.get('email')?.touched)
+        "
+      >
+        <span *ngIf="loginForm.get('email')?.errors?.['required']"
+          >Email is required.</span
+        >
+        <span *ngIf="loginForm.get('email')?.errors?.['email']"
+          >Invalid email.</span
+        >
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field>
+      <mat-label>Password</mat-label>
+      <input
+        matInput
+        placeholder="Password"
+        formControlName="password"
+        [type]="hide ? 'password' : 'text'"
+        required
+        minlength="6"
+      />
+      <mat-icon matSuffix (click)="hide = !hide">
+        {{ hide ? "visibility" : "visibility_off" }}
+      </mat-icon>
+      <mat-error
+        class="error"
+        *ngIf="
+          loginForm.get('password')?.invalid &&
+          (loginForm.get('password')?.dirty ||
+            loginForm.get('password')?.touched)
+        "
+      >
+        <span *ngIf="loginForm.get('password')?.errors?.['required']"
+          >Password is required.</span
+        >
+        <span *ngIf="loginForm.get('password')?.errors?.['minlength']"
+          >Password must be at least 6 characters long.</span
+        >
+      </mat-error>
+    </mat-form-field>
+    <div class="form-footer">
+      <mat-checkbox color="primary" formControlName="rememberMe"
+        >Remember me</mat-checkbox
+      >
+      <p><a routerLink="/forgot-password">Forgot Password?</a></p>
+    </div>
+
+    <button mat-raised-button class="btn-login" [disabled]="!loginForm.valid">
+      LOGIN
+    </button>
+  </form>
+</div>
