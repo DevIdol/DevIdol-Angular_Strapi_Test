@@ -12,18 +12,28 @@ export class AuthService {
 
   constructor(private http: HttpClient) {}
 
-  public login(email: string, password: string): Observable<any> {
+  public login(
+    email: string,
+    password: string,
+    rememberMe: boolean
+  ): Observable<any> {
     const body = { identifier: email, password };
-    return this.http
-      .post('http://localhost:1337/api/auth/local', body)
-      .pipe(tap((data: any) => localStorage.setItem('token', data.jwt)));
+    return this.http.post('http://localhost:1337/api/auth/local', body).pipe(
+      tap((data: any) => {
+        const storage = rememberMe ? localStorage : sessionStorage;
+        storage.setItem('token', data.jwt);
+      })
+    );
   }
 
   public isAuthenticated(): boolean {
-    const token = localStorage.getItem('token');
-    if(token){
+    let token = localStorage.getItem('token');
+    if (!token) {
+      token = sessionStorage.getItem('token');
+    }
+    if (token) {
       const decodedToken: any = this.jwtHelper.decodeToken(token);
-      console.log(decodedToken)
+      console.log(decodedToken);
     }
 
     if (token && !this.jwtHelper.isTokenExpired(token)) {
@@ -31,11 +41,16 @@ export class AuthService {
     }
 
     localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     return false;
   }
 
   public isAdmin(): boolean {
-    const token = localStorage.getItem('token');
+    let token = localStorage.getItem('token');
+
+    if (!token) {
+      token = sessionStorage.getItem('token');
+    }
 
     if (token) {
       const decodedToken: any = this.jwtHelper.decodeToken(token);
@@ -43,10 +58,12 @@ export class AuthService {
     }
 
     localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
     return false;
   }
 
   public logout(): void {
     localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
   }
 }

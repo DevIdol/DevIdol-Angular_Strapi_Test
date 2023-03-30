@@ -36,7 +36,8 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     const email = this.loginForm.get('email')?.value;
     const password = this.loginForm.get('password')?.value;
-    this.authService.login(email, password).subscribe(
+    const rememberMe = this.loginForm.get('rememberMe')?.value;
+    this.authService.login(email, password, rememberMe).subscribe(
       () => {
         this.loading = false;
         const isAdmin = this.authService.isAdmin();
@@ -52,4 +53,5 @@ export class LoginComponent implements OnInit {
       }
     );
   }
+
 }

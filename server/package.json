@@ -15,7 +15,7 @@
     "@strapi/strapi": "4.8.2",
     "jsonwebtoken": "^9.0.0",
     "pg": "8.8.0",
-    "strapi-plugin-users-permissions": "^3.6.0-beta.5"
+    "strapi-plugin-users-permissions": "^3.1.0-alpha.5"
   },
   "author": {
     "name": "A Strapi developer"
