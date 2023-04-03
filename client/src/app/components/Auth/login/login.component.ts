@@ -38,9 +38,9 @@ export class LoginComponent implements OnInit {
     const password = this.loginForm.get('password')?.value;
     const rememberMe = this.loginForm.get('rememberMe')?.value;
     this.authService.login(email, password, rememberMe).subscribe(
-      () => {
+      async () => {
         this.loading = false;
-        const isAdmin = this.authService.isAdmin();
+        const isAdmin = await this.authService.isAdmin();
         if (isAdmin) {
           this.router.navigate(['/admin']);
         } else {
@@ -53,5 +53,6 @@ export class LoginComponent implements OnInit {
       }
     );
   }
-
+  
+  
 }

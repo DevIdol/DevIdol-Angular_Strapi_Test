@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Observable } from 'rxjs';
-import { tap } from 'rxjs/operators';
+import { Observable, of } from 'rxjs';
+import { map, tap } from 'rxjs/operators';
+import { Role } from '../components/interfaces/interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -45,20 +46,23 @@ export class AuthService {
     return false;
   }
 
-  public isAdmin(): boolean {
-    let token = localStorage.getItem('token');
-
-    if (!token) {
-      token = sessionStorage.getItem('token');
-    }
-
+  public async isAdmin(): Promise<boolean> {
+    const token =
+      localStorage.getItem('token') || sessionStorage.getItem('token');
     if (token) {
-      const decodedToken: any = this.jwtHelper.decodeToken(token);
-      return decodedToken.role === 'admin';
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+      try {
+        const user = await this.http
+          .get<any>('http://localhost:1337/api/users/me?populate=*', {
+            headers,
+          })
+          .toPromise();
+        console.log(user.role);
+        return user.role.name === 'Admin';
+      } catch (error) {
+        console.error('Failed to fetch user data', error);
+      }
     }
-
-    localStorage.removeItem('token');
-    sessionStorage.removeItem('token');
     return false;
   }
 

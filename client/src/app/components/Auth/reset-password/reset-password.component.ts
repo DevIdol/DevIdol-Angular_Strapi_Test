@@ -6,6 +6,7 @@ import {
   Validators,
 } from '@angular/forms';
 import { passwordMatchValidator } from '../../validators/validators';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -15,8 +16,11 @@ import { passwordMatchValidator } from '../../validators/validators';
 export class ResetPasswordComponent {
   resetPassForm: FormGroup | any;
   hide = true;
+  isAdmin: boolean = false;
 
-  constructor(private fb: FormBuilder) {}
+  constructor(private fb: FormBuilder, public authService: AuthService) {
+    authService.isAdmin().then((admin) => (this.isAdmin = admin));
+  }
 
   ngOnInit() {
     this.resetPassForm = this.fb.group(
