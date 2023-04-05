@@ -1,0 +1,284 @@
+<div class="form-wrapper">
+  <form
+    [formGroup]="combineEmployeeForm"
+    (ngSubmit)="employeeSubmit()"
+    novalidate
+  >
+    <h2 *ngIf="!employeeId">Create New Employee</h2>
+    <h2 *ngIf="employeeId">Edit Employee</h2>
+    <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
+    <div formGroupName="employee">
+      <!-- Username -->
+      <mat-form-field class="input">
+        <mat-label>Name</mat-label>
+        <input type="text" matInput formControlName="username" />
+        <mat-error
+          class="error"
+          *ngIf="
+            employeeForm.get('username')?.invalid &&
+            (employeeForm.get('username')?.dirty ||
+              employeeForm.get('username')?.touched)
+          "
+        >
+          <span *ngIf="employeeForm.get('username')?.errors?.['required']"
+            >Email is required.</span
+          >
+          <span *ngIf="employeeForm.get('username')?.errors?.['email']"
+            >Invalid email.</span
+          >
+          <span *ngIf="employeeForm.get('username')?.errors?.['maxlength']"
+            >Employee name must be less than 46 chars.</span
+          >
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Email -->
+      <mat-form-field class="input">
+        <mat-label>Email</mat-label>
+        <input
+          type="email"
+          matInput
+          formControlName="email"
+          placeholder="Ex. user@example.com"
+        />
+        <mat-error
+          class="error"
+          *ngIf="
+            employeeForm.get('email')?.invalid &&
+            (employeeForm.get('email')?.dirty ||
+              employeeForm.get('email')?.touched)
+          "
+        >
+          <span *ngIf="employeeForm.get('email')?.errors?.['required']"
+            >Email is required.</span
+          >
+          <span *ngIf="employeeForm.get('email')?.errors?.['email']"
+            >Invalid email.</span
+          >
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Password -->
+      <mat-form-field class="input" *ngIf="!employeeId">
+        <mat-label>Password</mat-label>
+        <input
+          matInput
+          placeholder="Password"
+          formControlName="password"
+          [type]="hide ? 'password' : 'text'"
+          required
+          minlength="6"
+        />
+        <mat-icon matSuffix (click)="hide = !hide">
+          {{ hide ? "visibility_off" : "visibility" }}
+        </mat-icon>
+        <mat-error
+          class="error"
+          *ngIf="
+            employeeForm.get('password')?.invalid &&
+            (employeeForm.get('password')?.dirty ||
+              employeeForm.get('password')?.touched)
+          "
+        >
+          <span *ngIf="employeeForm.get('password')?.errors?.['required']"
+            >Password is required.</span
+          >
+          <span *ngIf="employeeForm.get('password')?.errors?.['minlength']"
+            >Password must be at least 6 characters long.</span
+          >
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Profile Image -->
+      <div class="input profile-select">
+        <img
+          class="profile-photo"
+          *ngIf="profileImg"
+          [src]="profileImg"
+          alt=""
+        />
+        <input
+          type="file"
+          (change)="onFileSelected($event)"
+          placeholder="Select Profile"
+        />
+      </div>
+
+      <!-- Address -->
+      <mat-form-field class="input">
+        <mat-label>Address</mat-label>
+        <textarea
+          matInput
+          maxlength="500"
+          rows="1"
+          formControlName="address"
+        ></textarea>
+      </mat-form-field>
+
+      <!-- Phone Number -->
+      <mat-form-field class="input">
+        <mat-label>Phone Number</mat-label>
+        <input
+          type="text"
+          matInput
+          formControlName="phone"
+          placeholder="09*********"
+        />
+        <mat-error
+          class="error"
+          *ngIf="
+            employeeForm.get('phone')?.invalid &&
+            (employeeForm.get('phone')?.dirty ||
+              employeeForm.get('phone')?.touched)
+          "
+        >
+          <span *ngIf="employeeForm.get('phone')?.errors?.['minlength']">
+            Phone number should be greater than 8.
+          </span>
+          <span *ngIf="employeeForm.get('phone')?.errors?.['maxlength']">
+            Phone number should be less than 12.
+          </span>
+        </mat-error>
+      </mat-form-field>
+
+      <!-- DOB -->
+      <mat-form-field class="input">
+        <mat-label>Date of Birth</mat-label>
+        <input matInput [matDatepicker]="dob" formControlName="dob" />
+        <mat-datepicker-toggle matSuffix [for]="dob"></mat-datepicker-toggle>
+        <mat-datepicker #dob></mat-datepicker>
+        <mat-error
+          class="error"
+          *ngIf="employeeForm.controls['dob'].errors?.['invalidAge']"
+        >
+          Age must be between 15 and 119 years old.
+        </mat-error>
+      </mat-form-field>
+
+      <!-- Position -->
+      <mat-form-field class="input">
+        <mat-select formControlName="role" placeholder="Select Position*">
+          <mat-option *ngFor="let role of roles" [value]="role.value">{{
+            role.label
+          }}</mat-option>
+        </mat-select>
+        <mat-error
+          *ngIf="
+            employeeForm.controls['role'].invalid &&
+            (employeeForm.controls['role'].dirty ||
+              employeeForm.controls['role'].touched)
+          "
+        >
+          Position is required.
+        </mat-error>
+      </mat-form-field>
+    </div>
+
+    <!-- Employee Edit Change Password Option -->
+    <div *ngIf="employeeId" class="input">
+      <!-- Change Password Toggle -->
+      <div class="input">
+        <mat-checkbox
+          (change)="changePasswordToggle()"
+          class="check-box"
+          color="primary"
+          >Change Password?</mat-checkbox
+        >
+      </div>
+      <div formGroupName="changePassword" *ngIf="isChangePassword">
+        <!-- Current Password -->
+        <mat-form-field class="input">
+          <mat-label>Current Password</mat-label>
+          <input
+            matInput
+            placeholder="Current Password"
+            formControlName="currentPassword"
+            [type]="hide ? 'password' : 'text'"
+            required
+          />
+          <mat-icon matSuffix (click)="hide = !hide">
+            {{ hide ? "visibility_off" : "visibility" }}
+          </mat-icon>
+          <mat-error
+            class="error"
+            *ngIf="
+              changePasswordForm.get('currentPassword')?.invalid &&
+              (changePasswordForm.get('currentPassword')?.dirty ||
+                changePasswordForm.get('currentPassword')?.touched)
+            "
+          >
+            <span
+              *ngIf="changePasswordForm.get('currentPassword')?.errors?.['required']"
+              >Current Password is required.</span
+            >
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field class="input">
+          <mat-label>Password</mat-label>
+          <input
+            matInput
+            placeholder="Password"
+            formControlName="password"
+            [type]="hide ? 'password' : 'text'"
+            required
+            minlength="6"
+          />
+          <mat-icon matSuffix (click)="hide = !hide">
+            {{ hide ? "visibility_off" : "visibility" }}
+          </mat-icon>
+          <mat-error
+            class="error"
+            *ngIf="
+              changePasswordForm.get('password')?.invalid &&
+              (changePasswordForm.get('password')?.dirty ||
+                changePasswordForm.get('password')?.touched)
+            "
+          >
+            <span
+              *ngIf="changePasswordForm.get('password')?.errors?.['required']"
+              >Password is required.</span
+            >
+            <span
+              *ngIf="changePasswordForm.get('password')?.errors?.['minlength']"
+              >Password must be at least 6 characters long.</span
+            >
+          </mat-error>
+        </mat-form-field>
+
+        <mat-form-field class="input">
+          <mat-label>Confirm Password</mat-label>
+          <input
+            matInput
+            formControlName="passwordConfirmation"
+            required
+            [type]="hide ? 'password' : 'text'"
+          />
+          <mat-error
+            *ngIf="
+              changePasswordForm
+                .get('passwordConfirmation')
+                ?.hasError('passwordMismatch')
+            "
+          >
+            Passwords do not match.
+          </mat-error>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <button
+      mat-raised-button
+      type="submit"
+      class="btn-submit"
+      [disabled]="
+        isChangePassword ? !combineEmployeeForm.valid : !employeeForm.valid
+      "
+    >
+      <mat-spinner *ngIf="isLoading" class="loading"></mat-spinner>
+      <span *ngIf="!isLoading && !employeeId">CREATE</span>
+      <span *ngIf="!isLoading && employeeId">UPDATE</span>
+    </button>
+  </form>
+</div>
+
+<app-footer></app-footer>

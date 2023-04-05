@@ -1,29 +1,75 @@
 header {
   position: fixed;
-  background-color: var(--primary-color);
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  padding: 20px;
+  background-color: var(--primary-color);
+  padding: 16px 20px 2px;
+  box-shadow: 0 5px 5px -5px var(--font-dark);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  box-shadow: 0 5px 5px -5px var(--btn-hover);
+  gap: 20px;
+  z-index: 99999;
+
   h1 {
     a {
-      font-size: 28px;
+      font-size: 20px;
       color: var(--font-light);
-    }
-  }
-  nav{
-    ul{
       display: flex;
       flex-direction: row;
       align-items: center;
-      gap: 20px;
-      li{
-        cursor: pointer;
-        a{
-          color: var(--font-light);
+      justify-content: flex-start;
+      gap: 6px;
+
+      img {
+        width: 34px;
+      }
+    }
+  }
+
+  .header-right {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+
+    nav {
+      ul {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        gap: 30px;
+
+        li {
+          cursor: pointer;
+
+          a {
+            color: var(--font-light);
+          }
         }
+      }
+    }
+
+    .drop-down {
+      margin-top: -10px;
+      padding: 6px 10px;
+      background-color: var(--secondary-color);
+      border: none;
+      border-radius: var(--border-radius);
+    }
+
+    .dropdown-items {
+      background-color: var(--secondary-color);
+
+      button {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      button:focus {
+        background-color: var(--primary-color);
       }
     }
   }

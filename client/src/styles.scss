@@ -1,45 +1,87 @@
+// Custom Theming for Angular Material
+// For more information: https://material.angular.io/guide/theming
+// @import "~mdb-angular-ui-kit/assets/scss/mdb/mdb.scss";
+
+@use "@angular/material" as mat;
+
+// Plus imports for other components in your app.
+
+// Include the common styles for Angular Material. We include this here so that you only
+// have to load a single css file for Angular Material in your app.
+// Be sure that you only ever include this mixin once!
+@include mat.core();
+
+// Define the palettes for your theme using the Material Design palettes available in palette.scss
+// (imported above). For each palette, you can optionally specify a default, lighter, and darker
+// hue. Available color palettes: https://material.io/design/color/
+$client-primary: mat.define-palette(mat.$indigo-palette);
+$client-accent: mat.define-palette(mat.$pink-palette, A200, A100, A400);
+
+// The warn palette is optional (defaults to red).
+$client-warn: mat.define-palette(mat.$red-palette);
+
+// Create the theme object. A theme consists of configurations for individual
+// theming systems such as "color" or "typography".
+$client-theme: mat.define-light-theme(
+  (
+    color: (
+      primary: $client-primary,
+      accent: $client-accent,
+      warn: $client-warn,
+    ),
+  )
+);
+
+// Include theme styles for core and each component used in your app.
+// Alternatively, you can import and @include the theme mixins for each component
+// that you are using.
+@include mat.all-component-themes($client-theme);
+
+/* Importing Bootstrap SCSS file. */
+@import "bootstrap/scss/bootstrap";
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  text-decoration: none;
-  list-style: none;
+  list-style: none !important;
+  text-decoration: none !important;
 }
 
 :root {
-  --primary-color: #020547;
-  --background-color: #e8e9fc;
-  --font-light: #e8e9fc;
-  --font-dark: #020547;
-  --btn-hover: #050730;
-  --card-color: #f3efef33;
+  --primary-color: #010436;
+  --secondary-color: #e8e9fc;
+  --font-light: #f1f1fa;
+  --font-dark: #191920;
+  --border-color: #807878;
   --border-radius: 6px;
-  --border-color: #c0c0c0;
-  --dis-color: #808080;
-  --title: 24px;
-  --sub-title: 20px;
-  --transition: 0.8s ease;
-  --success-color: #014b4b;
-  --error-color: #f74121;
-}
-
-body {
-  background-color: var(--background-color);
-  color: var(--font-dark);
-  font-size: 16px;
-  font-weight: 400;
-  max-width: 1920px;
-  margin: 0 auto;
+  --btn-disable: #c0c0c0;
+  --link-color: #3232f1;
+  --success-color: #055e5e;
+  --error-color: #c0250a;
+  --box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;
+  --transition: 0.9s ease;
+  --footer-color: #040413;
 }
 
 html,
 body {
   height: 100%;
 }
-body {
-  margin: 0;
-  font-family: Roboto, "Helvetica Neue", sans-serif;
-}
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+body {
+  background-color: var(--secondary-color);
+  color: var(--font-color);
+  font-size: 14px;
+  max-width: 1920px;
+  margin: 0 auto;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+  .mat-mdc-checkbox.mat-mdc-checkbox-checked .mdc-checkbox__background,
+  .mdc-checkbox__ripple {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-color) !important;
+  }
+  img {
+    max-width: 100%;
+  }
+}

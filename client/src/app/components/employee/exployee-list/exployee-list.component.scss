@@ -1,0 +1,80 @@
+.wrapper {
+  width: 94vw;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 88px;
+  .employee-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    .search-wrapper {
+      display: flex;
+      flex-direction: row;
+      justify-content: flex-start;
+
+      .search {
+        width: 280px;
+        height: 70px;
+        .search-label {
+          font-size: 14px;
+        }
+      }
+
+      button {
+        background-color: var(--primary-color);
+        color: var(--font-light);
+        margin-top: 1px;
+        padding: 23.4px 10px;
+        border-top-left-radius: 0;
+        border-bottom-left-radius: 0;
+      }
+    }
+    p {
+      background-color: var(--primary-color);
+      border-radius: var(--border-radius);
+      a {
+        color: var(--font-light);
+      }
+    }
+  }
+  .table-wrapper {
+    width: 100%;
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    .table {
+      white-space: nowrap;
+      th {
+        vertical-align: middle;
+        background-color: var(--primary-color);
+        color: var(--font-light);
+        font-weight: 500;
+      }
+      td {
+        vertical-align: middle;
+      }
+      .profile_photo {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+      }
+      .detail {
+        background-color: var(--success-color);
+        color: var(--font-light);
+        margin-right: 10px;
+      }
+      .edit{
+        background-color: var(--primary-color);
+        color: var(--font-light);
+        margin-right: 10px;
+      }
+      .delete {
+        background-color: var(--error-color);
+        color: var(--font-light);
+      }
+    }
+  }
+}

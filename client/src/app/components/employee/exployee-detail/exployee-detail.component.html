@@ -1,0 +1,42 @@
+<div class="wrapper" *ngIf="employeeDetail">
+  <img
+    class="profile"
+    src="{{
+      employeeDetail.profile?.formats?.large?.url ??
+        '../../../../assets/images/img_profile.png'
+    }}"
+    alt="Profile"
+  />
+  <h2>{{ employeeDetail.username }}</h2>
+  <div class="info-wrapper">
+    <div class="email">
+      <p>Email:</p>
+      <p>{{ employeeDetail.email }}</p>
+    </div>
+    <div class="address">
+      <p>Address:</p>
+      <p>{{ employeeDetail.address ? employeeDetail.address : "--" }}</p>
+    </div>
+    <div class="phone">
+      <p>Phone Number:</p>
+      <p>{{ employeeDetail.phone ? employeeDetail.phone : "--" }}</p>
+    </div>
+    <div class="dob">
+      <p>DOB:</p>
+      <p>{{ employeeDetail.dob ? employeeDetail.dob : "--" }}</p>
+    </div>
+    <div class="role">
+      <p>Position:</p>
+      <p>{{ employeeDetail.role.name }}</p>
+    </div>
+  </div>
+  <div class="info-wrapper">
+    <a
+      class="edit"
+      mat-button
+      routerLink="/employee-edit/{{ employeeDetail.id }}"
+      >Edit</a
+    >
+  </div>
+</div>
+<app-footer></app-footer>

@@ -1,0 +1,65 @@
+.form-wrapper {
+  box-shadow: var(--box-shadow);
+  border-radius: var(--border-radius);
+  padding: 20px;
+  width: 440px;
+  margin: 0 auto;
+  margin-top: 100px;
+
+  .form-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  form {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+
+    h2 {
+      font-size: 18px;
+    }
+
+    .input {
+      width: 100%;
+    }
+    .profile-select {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      padding-bottom: 20px;
+      .profile-photo {
+        width: 60px;
+        border-radius: 50%;
+      }
+    }
+
+    .btn-submit {
+      background-color: var(--primary-color);
+      cursor: pointer;
+
+      .loading {
+        width: 24px !important;
+      }
+
+      .loading::ng-deep circle {
+        stroke: var(--font-light);
+      }
+
+      span {
+        color: var(--font-light);
+        text-transform: uppercase;
+      }
+    }
+
+    .btn-submit:disabled {
+      color: var(--border-color);
+      background-color: var(--btn-disable);
+      cursor: not-allowed;
+      pointer-events: all;
+    }
+  }
+}

@@ -1,0 +1,58 @@
+import { Employee } from "../interfaces/interfaces";
+
+export const EMPLOYEE_DATA: Employee[] = [
+    {
+        id: 1,
+        name: 'Joe',
+        email: 'joe@gmail.com',
+        photo: 'https://res.cloudinary.com/dkq0ctrur/image/upload/v1680080230/Movie%20App/small_img_two_b61634be51.jpg',
+        address: 'Yangon',
+        phone: "+959891489955",
+        dob: new Date('1999-09-07'),
+    },
+    {
+        id: 2,
+        name: 'Michael',
+        email: 'mic@gmail.com',
+        photo: 'https://res.cloudinary.com/dkq0ctrur/image/upload/v1680080230/Movie%20App/small_img_two_b61634be51.jpg',
+        address: 'Mandalay',
+        phone: "+95999999999",
+        dob: new Date('1999-04-07'),
+    },
+    {
+        id: 3,
+        name: 'John',
+        email: 'john@gmail.com',
+        photo: 'https://res.cloudinary.com/dkq0ctrur/image/upload/v1680080230/Movie%20App/small_img_two_b61634be51.jpg',
+        address: 'Mandalay',
+        phone: "+95944444444",
+        dob: new Date('1999-04-07'),
+    },
+    {
+        id: 4,
+        name: 'Maria',
+        email: 'maria@gmail.com',
+        photo: 'https://res.cloudinary.com/dkq0ctrur/image/upload/v1680080230/Movie%20App/small_img_two_b61634be51.jpg',
+        address: 'Mandalay',
+        phone: "+95944444444",
+        dob: new Date('1999-04-07'),
+    },
+    {
+        id: 5,
+        name: 'Margeret',
+        email: 'margeret@gmail.com',
+        photo: 'https://res.cloudinary.com/dkq0ctrur/image/upload/v1680080230/Movie%20App/small_img_two_b61634be51.jpg',
+        address: 'Mandalay',
+        phone: "+95944444444",
+        dob: new Date('1999-04-07'),
+    },
+    {
+        id: 6,
+        name: 'Matthew',
+        email: 'matthew@gmail.com',
+        photo: 'https://res.cloudinary.com/dkq0ctrur/image/upload/v1680080230/Movie%20App/small_img_two_b61634be51.jpg',
+        address: 'Mandalay',
+        phone: "+95944444444",
+        dob: new Date('1999-04-07'),
+    },
+];
