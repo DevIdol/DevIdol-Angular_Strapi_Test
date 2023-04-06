@@ -1,18 +1,18 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment';
+import jwt_decode from 'jwt-decode';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class AuthService {
+  strapiURL = environment.mainUrl;
 
-  strapiURL = environment.mainUrl
+  constructor(private http: HttpClient) {}
 
-  constructor(private http: HttpClient) { }
-
+  //Login
   public login(
     email: string,
     password: string,
@@ -27,17 +27,47 @@ export class AuthService {
     );
   }
 
+  //Is Authentication
   public isAuth() {
-    let token = localStorage.getItem('token')
+    let token = localStorage.getItem('token');
     if (!token) {
-      token = sessionStorage.getItem('token')
+      token = sessionStorage.getItem('token');
     }
-    return token
+    return token;
   }
 
+  //Is Admin
+  public async isAdmin(): Promise<boolean> {
+    const token = this.isAuth();
+    if (token) {
+      const headers = new HttpHeaders().set('Authorization', `Bearer ${token}`);
+      try {
+        const user = await this.http
+          .get<any>('http://localhost:1337/api/users/me?populate=*', {
+            headers,
+          })
+          .toPromise();
+        console.log(user.role);
+        return user.role.name === 'Admin';
+      } catch (error) {
+        console.error('Failed to fetch user data', error);
+      }
+    }
+    return false;
+  }
+
+  //Decoded Token
+  public decodedToken() {
+    const token: any = this.isAuth();
+    if (token) {
+      const { id }: any = jwt_decode(token);
+      return id;
+    }
+  }
+
+  //Logout
   public logout() {
-    localStorage.removeItem('token')
-    sessionStorage.removeItem('token')
+    localStorage.removeItem('token');
+    sessionStorage.removeItem('token');
   }
-
 }

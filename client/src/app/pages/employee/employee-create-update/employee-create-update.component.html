@@ -1,13 +1,14 @@
 <div class="form-wrapper">
   <form
-    [formGroup]="combineEmployeeForm"
+    [formGroup]="createUpdateEmployeeForm"
     (ngSubmit)="employeeSubmit()"
     novalidate
   >
-    <h2 *ngIf="!employeeId">Create New Employee</h2>
-    <h2 *ngIf="employeeId">Edit Employee</h2>
+    <h2 *ngIf="!isUpdateMode">Create New Employee</h2>
+    <h2 *ngIf="isUpdateMode">Edit Employee</h2>
     <p class="error" *ngIf="errorMessage">{{ errorMessage }}</p>
     <div formGroupName="employee">
+
       <!-- Username -->
       <mat-form-field class="input">
         <mat-label>Name</mat-label>
@@ -59,7 +60,7 @@
       </mat-form-field>
 
       <!-- Password -->
-      <mat-form-field class="input" *ngIf="!employeeId">
+      <mat-form-field class="input" *ngIf="!isUpdateMode">
         <mat-label>Password</mat-label>
         <input
           matInput
@@ -100,7 +101,7 @@
         <input
           type="file"
           (change)="onFileSelected($event)"
-          placeholder="Select Profile"
+          accept=".jpg, .jpeg, .png"
         />
       </div>
 
@@ -155,9 +156,9 @@
         </mat-error>
       </mat-form-field>
 
-      <!-- Position -->
+      <!-- role -->
       <mat-form-field class="input">
-        <mat-select formControlName="role" placeholder="Select Position*">
+        <mat-select formControlName="role" placeholder="Select role*">
           <mat-option *ngFor="let role of roles" [value]="role.value">{{
             role.label
           }}</mat-option>
@@ -169,14 +170,13 @@
               employeeForm.controls['role'].touched)
           "
         >
-          Position is required.
+          role is required.
         </mat-error>
       </mat-form-field>
     </div>
 
     <!-- Employee Edit Change Password Option -->
-    <div *ngIf="employeeId" class="input">
-      <!-- Change Password Toggle -->
+    <div *ngIf="isUpdateMode" class="input">
       <div class="input">
         <mat-checkbox
           (change)="changePasswordToggle()"
@@ -185,6 +185,7 @@
           >Change Password?</mat-checkbox
         >
       </div>
+
       <div formGroupName="changePassword" *ngIf="isChangePassword">
         <!-- Current Password -->
         <mat-form-field class="input">
@@ -213,6 +214,8 @@
             >
           </mat-error>
         </mat-form-field>
+
+        <!-- New Password -->
         <mat-form-field class="input">
           <mat-label>Password</mat-label>
           <input
@@ -245,18 +248,19 @@
           </mat-error>
         </mat-form-field>
 
+        <!-- Confirm Password -->
         <mat-form-field class="input">
           <mat-label>Confirm Password</mat-label>
           <input
             matInput
-            formControlName="passwordConfirmation"
+            formControlName="confirmPassword"
             required
             [type]="hide ? 'password' : 'text'"
           />
           <mat-error
             *ngIf="
               changePasswordForm
-                .get('passwordConfirmation')
+                .get('confirmPassword')
                 ?.hasError('passwordMismatch')
             "
           >
@@ -271,12 +275,12 @@
       type="submit"
       class="btn-submit"
       [disabled]="
-        isChangePassword ? !combineEmployeeForm.valid : !employeeForm.valid
+        isChangePassword ? !createUpdateEmployeeForm.valid : !employeeForm.valid
       "
     >
       <mat-spinner *ngIf="isLoading" class="loading"></mat-spinner>
-      <span *ngIf="!isLoading && !employeeId">CREATE</span>
-      <span *ngIf="!isLoading && employeeId">UPDATE</span>
+      <span *ngIf="!isLoading && !isUpdateMode">CREATE</span>
+      <span *ngIf="!isLoading && isUpdateMode">UPDATE</span>
     </button>
   </form>
 </div>

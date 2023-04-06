@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/services/auth.service';
 
@@ -8,9 +8,15 @@ import { AuthService } from 'src/app/services/auth.service';
     styleUrls: ['./nav-bar.component.scss'],
 })
 
-export class NavBarComponent {
+export class NavBarComponent implements OnInit {
+
+    id!: number;
 
     constructor(public authService: AuthService, private router: Router) { }
+
+    ngOnInit() {
+        this.id = this.authService.decodedToken()
+    }
 
     logout() {
         this.router.navigate(["/"])

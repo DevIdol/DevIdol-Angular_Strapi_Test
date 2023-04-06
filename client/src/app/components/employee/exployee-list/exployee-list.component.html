@@ -1,4 +1,4 @@
-<div class="wrapper">
+<div class="wrapper" *ngIf="employeeData && !pageLoading">
   <div class="employee-header">
     <div class="search-wrapper">
       <mat-form-field class="search">
@@ -31,7 +31,7 @@
     </p>
   </div>
 
-  <div class="table-wrapper" *ngIf="employeeData">
+  <div class="table-wrapper">
     <table mat-table [dataSource]="employeeData" class="table" matSort>
       <ng-container matColumnDef="id">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Employee ID</th>
@@ -54,6 +54,9 @@
             class="profile_photo"
             src="{{
               employee.profile?.formats?.large?.url ??
+                employee.profile?.formats?.medium?.url ??
+                employee.profile?.formats?.small?.url ??
+                employee.profile?.formats?.thumbnail?.url ??
                 '../../../../assets/images/img_profile.png'
             }}"
             alt="Profile"
@@ -64,21 +67,21 @@
       <ng-container matColumnDef="address">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Address</th>
         <td mat-cell *matCellDef="let employee">
-          {{ employee.address ?? "--" }}
+          {{ employee.address ? employee.address : "--" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="phone">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>Phone</th>
         <td mat-cell *matCellDef="let employee">
-          {{ employee.phone ?? "--" }}
+          {{ employee.phone ? employee.phone : "--" }}
         </td>
       </ng-container>
 
       <ng-container matColumnDef="dob">
         <th mat-header-cell mat-sort-header *matHeaderCellDef>DOB</th>
         <td mat-cell *matCellDef="let employee">
-          {{ (employee.dob | date : "YYYY-MM-dd") ?? "--" }}
+          {{ employee.dob ? (employee.dob | date : "YYYY-MM-dd") : "--" }}
         </td>
       </ng-container>
 
@@ -86,29 +89,42 @@
         <th mat-header-cell *matHeaderCellDef>Actions</th>
         <td mat-cell *matCellDef="let employee">
           <a class="detail" mat-button routerLink="/employees/{{ employee.id }}"
-            ><mat-icon>perm_contact_calendar</mat-icon>Detail</a
+            ><mat-icon>perm_contact_calendar</mat-icon></a
           >
           <a
             class="edit"
             mat-button
             routerLink="/employee-edit/{{ employee.id }}"
-            ><mat-icon>edit</mat-icon>Edit</a
+            ><mat-icon>edit</mat-icon></a
           >
-          <button class="delete" (click)="deleteEmployee(employee.id)" mat-button>
-            <mat-icon>delete</mat-icon>Delete
+          <button
+            class="delete"
+            (click)="deleteEmployee(employee.id)"
+            mat-button
+          >
+            <mat-icon>delete</mat-icon>
           </button>
         </td>
       </ng-container>
 
       <tr mat-header-row *matHeaderRowDef="tableHeader"></tr>
-      <tr mat-row *matRowDef="let row; columns: tableHeader"></tr>
+      <tr
+        mat-row
+        *matRowDef="let row; columns: tableHeader; let i = index"
+        [ngClass]="{ 'even-row': i % 2 == 0 }"
+      ></tr>
     </table>
   </div>
   <mat-paginator
-    *ngIf="employeeData"
+  class="paginator"
     [pageSizeOptions]="[5, 10, 20, 50, 100]"
     showFirstLastButtons
   ></mat-paginator>
 </div>
 
-<app-footer></app-footer>
+<app-loading *ngIf="pageLoading"></app-loading>
+
+<app-footer
+  *ngIf="employeeData && !pageLoading"
+  [ngClass]="{ 'fixed-footer': isFooterFixed }"
+></app-footer>

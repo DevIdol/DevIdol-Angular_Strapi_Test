@@ -70,12 +70,7 @@
       "type": "media",
       "multiple": false,
       "required": false,
-      "allowedTypes": [
-        "images",
-        "files",
-        "videos",
-        "audios"
-      ]
+      "allowedTypes": ["images", "files", "videos", "audios"]
     },
     "address": {
       "type": "text"
@@ -84,7 +79,8 @@
       "type": "string"
     },
     "dob": {
-      "type": "date"
+      "type": "date",
+      "allowNull": true
     },
     "deletedAt": {
       "type": "date"

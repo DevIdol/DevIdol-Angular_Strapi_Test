@@ -6,7 +6,9 @@ import {
   Validators,
 } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Position } from 'src/app/interfaces/interfaces';
+import * as moment from 'moment';
+import { EMPTY } from 'rxjs';
+import { Role } from 'src/app/interfaces/interfaces';
 import { EmployeeService } from 'src/app/services/employee.service';
 import {
   dobValidator,
@@ -14,27 +16,30 @@ import {
 } from 'src/app/validators/validators';
 
 @Component({
-  selector: 'app-exployee-create',
-  templateUrl: './exployee-create.component.html',
-  styleUrls: ['./exployee-create.component.scss'],
+  selector: 'app-employee-create-update',
+  templateUrl: './employee-create-update.component.html',
+  styleUrls: ['./employee-create-update.component.scss'],
 })
-export class ExployeeCreateComponent {
-  roles: Position[] = [
+export class EmployeeCreateUpdateComponent {
+  profileSize = ['large', 'medium', 'small', 'thumbnail'];
+
+  roles: Role[] = [
     { value: 1, label: 'Admin' },
     { value: 2, label: 'Member' },
   ];
 
   employeeForm!: FormGroup;
   changePasswordForm!: FormGroup;
-  combineEmployeeForm!: FormGroup;
+  createUpdateEmployeeForm!: FormGroup;
   profilePhoto!: File;
   profileImg = '';
+  imageName = '';
   hide = true;
   isLoading = false;
   errorMessage!: string;
   employeeId!: number;
   isChangePassword = false;
-  isUpdate = false;
+  isUpdateMode = false;
 
   constructor(
     private fb: FormBuilder,
@@ -46,18 +51,21 @@ export class ExployeeCreateComponent {
   ngOnInit() {
     const { id } = this.route.snapshot.params;
     this.employeeId = +id;
-    this.isUpdate = Boolean(id);
+    this.isUpdateMode = !!id;
     this.setupEmployeeForm();
     this.setupChangePasswordForm();
-    this.combineEmployeeForm = this.fb.group({
+    this.createUpdateEmployeeForm = this.fb.group({
       employee: this.employeeForm,
-      changePassword: this.isUpdate && this.changePasswordForm,
+      changePassword: this.isUpdateMode && this.changePasswordForm,
     });
 
-    if (this.isUpdate) {
+    if (this.isUpdateMode) {
       this.employeeService.getEmployee(this.employeeId).subscribe(
         (employee) => {
-          console.log(employee);
+          this.profileImg = this.profileSize
+            .map((key) => employee.profile?.formats?.[key]?.url)
+            .find((url: string) => !!url);
+          this.imageName = employee.profile?.name;
           this.employeeForm.patchValue({
             username: employee.username,
             email: employee.email,
@@ -79,6 +87,7 @@ export class ExployeeCreateComponent {
     }
   }
 
+  //Employee Form Validation
   private setupEmployeeForm(): void {
     this.employeeForm = this.fb.group({
       username: [
@@ -92,34 +101,34 @@ export class ExployeeCreateComponent {
       email: ['', [Validators.required, Validators.email]],
       password: [
         '',
-        !this.isUpdate && [Validators.required, Validators.minLength(6)],
+        !this.isUpdateMode && [Validators.required, Validators.minLength(6)],
       ],
-      address: [],
-      phone: [, [Validators.minLength(8), Validators.maxLength(11)]],
+      address: [''],
+      phone: ['', [Validators.minLength(8), Validators.maxLength(11)]],
       dob: [, dobValidator],
       role: ['', [Validators.required]],
     });
   }
 
+  //Change Password Form Validation
   private setupChangePasswordForm(): void {
-    if (this.isUpdate) {
+    if (this.isUpdateMode) {
       this.changePasswordForm = this.fb.group(
         {
           currentPassword: ['', [Validators.required]],
           password: ['', [Validators.required, Validators.minLength(6)]],
-          passwordConfirmation: [
-            '',
-            [Validators.required, Validators.minLength(6)],
-          ],
+          confirmPassword: ['', [Validators.required, Validators.minLength(6)]],
         },
         { validators: passwordMatchValidator } as AbstractControlOptions
       );
     }
   }
 
+  //Select Profile Image From Device
   onFileSelected(event: any) {
     if (event.target.files.length > 0) {
       const file = event.target.files[0];
+      this.profilePhoto = file;
       const reader = new FileReader();
       reader.onload = (e: any) => {
         this.profileImg = e.target.result;
@@ -128,75 +137,78 @@ export class ExployeeCreateComponent {
     }
   }
 
+  //Show or Hide to change Password
   changePasswordToggle() {
     this.isChangePassword = !this.isChangePassword;
   }
 
+  //Create or Update Employee Submit
   employeeSubmit() {
     this.isLoading = true;
-    const { username, email, password, address, phone, dob, role } = this.employeeForm.value;
-    const formData = new FormData();
+    const { username, email, password, address, phone, dob, role } =
+      this.employeeForm.value;
+    const formData: FormData = new FormData();
     formData.append('username', username);
     formData.append('email', email);
-    formData.append('address', address);
-    formData.append('phone', phone);
-    if (dob) {
-      formData.append('dob', dob);
-    }
     formData.append('role', role);
 
     if (password) {
       formData.append('password', password);
     }
-    if (this.profilePhoto) {
-      formData.append('profilePhoto', this.profilePhoto);
+    if (address) {
+      formData.append('address', address);
+    }
+    if (phone) {
+      formData.append('phone', phone);
     }
 
-    if (this.isUpdate) {
-      const { changePassword } = this.combineEmployeeForm.value;
+    if (dob) {
+      const dobFormatted = moment(dob).format('YYYY-MM-DD');
+      formData.append('dob', dobFormatted);
+    }
+
+    const upoloadProfile = new FormData();
+    if (this.profilePhoto) {
+      upoloadProfile.append('files', this.profilePhoto);
+    }
+
+    //Update Employee
+    if (this.isUpdateMode) {
+      const { changePassword } = this.createUpdateEmployeeForm.value;
       if (changePassword && changePassword.password) {
         formData.append('currentPassword', changePassword.currentPassword);
         formData.append('newPassword', changePassword.password);
-        formData.append('passwordConfirmation', changePassword.passwordConfirmation);
+        formData.append(
+          'passwordConfirmation',
+          changePassword.passwordConfirmation
+        );
       }
-      this.employeeService.updateEmployee(this.employeeId, formData).subscribe(
-        () => {
-          if (changePassword && changePassword.password) {
-            this.employeeService.changePassword(formData).subscribe(
-              () => {
-                this.isLoading = false;
-                this.router.navigate(['/employees']);
-              },
-              (error) => {
-                const { message } = error.error;
-                this.errorMessage = message;
-                this.isLoading = false;
-              }
-            );
-          } else {
+      this.employeeService
+        .updateEmployee(this.employeeId, formData, upoloadProfile)
+        .subscribe(
+          () => {
             this.isLoading = false;
             this.router.navigate(['/employees']);
+          },
+          (error) => {
+            const { message } = error.error.error;
+            this.errorMessage = message;
+            this.isLoading = false;
           }
-        },
-        (error) => {
-          const { message } = error.error;
-          this.errorMessage = message;
-          this.isLoading = false;
-        }
-      );
+        );
     } else {
-      this.employeeService.createEmployee(formData).subscribe(
+      //Create Employee
+      this.employeeService.createEmployee(formData, upoloadProfile).subscribe(
         () => {
           this.isLoading = false;
           this.router.navigate(['/employees']);
         },
         (error) => {
-          const { message } = error.error;
+          const { message } = error.error.error;
           this.errorMessage = message;
           this.isLoading = false;
         }
       );
     }
   }
-
 }

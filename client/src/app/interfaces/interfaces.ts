@@ -9,7 +9,7 @@ export interface Employee {
     role?: any;
 }
 
-export interface Position {
+export interface Role {
     value: number;
     label: string;
 }

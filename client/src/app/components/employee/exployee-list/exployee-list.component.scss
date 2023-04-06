@@ -47,6 +47,10 @@
     white-space: nowrap;
     .table {
       white-space: nowrap;
+      margin-bottom: 0;
+      .even-row{
+        background-color: #f2f2f280;
+      }
       th {
         vertical-align: middle;
         background-color: var(--primary-color);
@@ -77,4 +81,12 @@
       }
     }
   }
+  .paginator{
+    background-color: var(--btn-disable);
+  }
+}
+.fixed-footer{
+  width: 100%;
+  position: fixed;
+  bottom: 0;
 }

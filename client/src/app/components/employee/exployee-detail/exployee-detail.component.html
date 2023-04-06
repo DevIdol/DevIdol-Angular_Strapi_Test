@@ -1,12 +1,54 @@
-<div class="wrapper" *ngIf="employeeDetail">
-  <img
-    class="profile"
-    src="{{
-      employeeDetail.profile?.formats?.large?.url ??
-        '../../../../assets/images/img_profile.png'
-    }}"
-    alt="Profile"
-  />
+<div class="wrapper" *ngIf="employeeDetail && !pageLoading">
+  <div class="profile-wrapper">
+    <div class="d-inline-block edit-wrapper" ngbDropdown #myDrop="ngbDropdown">
+      <button
+        type="button"
+        class="btn btn-outline-success me-2 edit-profile"
+        (click)="$event.stopPropagation(); myDrop.open()"
+      >
+        <mat-icon>edit</mat-icon> <span>Edit</span>
+      </button>
+      <div ngbDropdownMenu aria-labelledby="dropdownManual" class="eidt-items">
+        <button ngbDropdownItem>
+          <label for="fileInput">Upload a profile</label>
+          <input
+            id="fileInput"
+            type="file"
+            (change)="onFileSelected($event)"
+            accept=".jpg, .jpeg, .png"
+          />
+        </button>
+        <button *ngIf="imageUrl" ngbDropdownItem (click)="deleteProfile()">
+          Remove a profile
+        </button>
+      </div>
+    </div>
+    <img
+      class="profile"
+      [src]="
+        profileImg ? profileImg : '../../../../assets/images/img_profile.png'
+      "
+      alt="Profile"
+    />
+  </div>
+  <div class="file-selected" *ngIf="fileSelected">
+    <p>{{ profilePhoto.name }}</p>
+    <button
+      class="btn btn-danger btn-sm me-2"
+      (click)="cancelFileSelection()"
+      *ngIf="!isLoading"
+    >
+      Cancel
+    </button>
+    <button class="btn btn-success btn-sm" (click)="uploadProfile()">
+      <span *ngIf="!isLoading">Save</span>
+      <span *ngIf="isLoading">Loading...</span>
+    </button>
+  </div>
+  <button class="btn btn-danger btn-sm me-2" *ngIf="isRemoving">
+    Removing...
+  </button>
+
   <h2>{{ employeeDetail.username }}</h2>
   <div class="info-wrapper">
     <div class="email">
@@ -39,4 +81,5 @@
     >
   </div>
 </div>
-<app-footer></app-footer>
+<app-loading *ngIf="pageLoading"></app-loading>
+<app-footer *ngIf="employeeDetail && !pageLoading"></app-footer>

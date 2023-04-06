@@ -23,6 +23,16 @@
       font-size: 18px;
     }
 
+    input[type="file"] {
+      font-size: 16px;
+      line-height: 1.5;
+      padding: 6px 12px;
+    }
+
+    input[type="file"]::before {
+      content: "";
+    }
+
     .input {
       width: 100%;
     }

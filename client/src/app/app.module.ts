@@ -29,7 +29,6 @@ import { ResetPasswordComponent } from './components/auth/reset-password/reset-p
 import { FooterComponent } from './components/footer/footer.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { ProfileComponent } from './components/profile/profile.component';
-import { ExployeeCreateComponent } from './components/employee/exployee-create/exployee-create.component';
 import { ExployeeListComponent } from './components/employee/exployee-list/exployee-list.component';
 import { ProjectCreateComponent } from './components/project/project-create/project-create.component';
 import { ProjectListComponent } from './components/project/project-list/project-list.component';
@@ -40,6 +39,7 @@ import { DatePipe } from '@angular/common';
 import { DATE_FORMAT } from './validators/validators';
 import { ExployeeDetailComponent } from './components/employee/exployee-detail/exployee-detail.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { EmployeeCreateUpdateComponent } from './pages/employee/employee-create-update/employee-create-update.component';
 
 
 
@@ -54,8 +54,8 @@ import { LoadingComponent } from './components/loading/loading.component';
     FooterComponent,
     DashboardComponent,
     ProfileComponent,
-    ExployeeCreateComponent,
     ExployeeListComponent,
+    EmployeeCreateUpdateComponent,
     ProjectCreateComponent,
     ProjectListComponent,
     TaskCreateComponent,
